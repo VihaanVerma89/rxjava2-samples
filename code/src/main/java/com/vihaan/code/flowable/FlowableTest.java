@@ -1,11 +1,16 @@
 package com.vihaan.code.flowable;
 
+import android.util.TimeUtils;
+
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableSubscriber;
@@ -22,7 +27,86 @@ import io.reactivex.internal.operators.flowable.FlowableLastMaybe;
 public class FlowableTest {
     public static void main(String[] args) throws InterruptedException {
 
-        test();
+//        test();
+        getData();
+    }
+
+    private static void getData() throws InterruptedException {
+        Map<String, String> data;
+        data = new LinkedHashMap<>();
+        data.put("Build tower in Pisa", "Ground looks good, no foundation work required.");
+        data.put("Finish bridge in Tacoma", "Found awesome girders at half the cost!");
+
+        Flowable<String> stringFlowable = Flowable.fromIterable(data.values());
+
+        Subscriber<String> subscriber=new Subscriber<String>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+
+                s.request(1);
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        stringFlowable.subscribe(subscriber);
+        Single<List<String>> listSingle = stringFlowable.delay(5000, TimeUnit.MILLISECONDS)
+                .toList();
+
+        listSingle.subscribe(new SingleObserver<List<String>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(List<String> strings) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
+
+        listSingle.toFlowable().subscribe(new Subscriber<List<String>>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+
+                s.request(1);
+            }
+
+            @Override
+            public void onNext(List<String> strings) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        Thread.sleep(20*1000);
     }
 
     private static void test() throws InterruptedException {
