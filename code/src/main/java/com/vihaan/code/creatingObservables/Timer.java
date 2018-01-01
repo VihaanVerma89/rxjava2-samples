@@ -1,5 +1,7 @@
 package com.vihaan.code.creatingObservables;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -8,37 +10,41 @@ import io.reactivex.disposables.Disposable;
  * Created by vihaanverma on 01/01/18.
  */
 
-public class Just {
+public class Timer {
     public static void main(String[] args) throws InterruptedException {
-        just();
+        timer();
     }
 
-    public static void just(){
-        Observable<Integer> just = Observable.just(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    public static void timer() throws InterruptedException {
+        Observable<Long> timer = Observable.timer(3, TimeUnit.SECONDS);
 
-        Observer<Integer> observer = new Observer<Integer>() {
+        Observer observer = new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
+
                 System.out.println();
             }
 
             @Override
-            public void onNext(Integer integer) {
-                System.out.println(integer);
+            public void onNext(Object o) {
 
+                System.out.println();
             }
 
             @Override
             public void onError(Throwable e) {
-                System.out.println(e.getMessage());
+
+                System.out.println();
             }
 
             @Override
             public void onComplete() {
-                System.out.println("complete");
+
+                System.out.println();
             }
         };
 
-        just.subscribe(observer);
+        timer.subscribe(observer);
+        Thread.sleep(1000* 10);
     }
 }
