@@ -1,20 +1,9 @@
 package com.vihaan.code.transformingObservables;
 
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.internal.operators.observable.ObservableGroupBy;
 import io.reactivex.observables.GroupedObservable;
 
 
@@ -24,7 +13,32 @@ import io.reactivex.observables.GroupedObservable;
 
 public class GroupBy {
     public static void main(String[] args) throws InterruptedException {
-        groupBy();
+//        groupBy();
+//        groupByLambda();
+        groupByOddEven();
+    }
+
+    private static void groupByLambda(){
+        Observable
+                .range(1,10)
+                .groupBy(number ->number%2)
+                .subscribe( group -> { group.subscribe(number -> {
+                    System.out.println(group.getKey() + " " + number);
+                });});
+    }
+
+    private static void groupByOddEven(){
+
+        Observable
+                .range(1,10)
+                .groupBy(number -> number%2==0? "EVEN":"ODD", number -> number%2==0?
+                        number*2:number*3)
+                .subscribe(group -> {
+                    group.subscribe(number -> {
+                        System.out.println(group.getKey() + " " + number);
+                    });
+                });
+
     }
 
     private static void groupBy() throws InterruptedException {

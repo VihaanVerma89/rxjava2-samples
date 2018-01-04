@@ -2,6 +2,7 @@ package com.vihaan.code.flowable;
 
 import android.util.TimeUtils;
 
+import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -18,6 +19,7 @@ import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.internal.operators.flowable.FlowableLastMaybe;
 
 /**
@@ -31,6 +33,23 @@ public class FlowableTest {
         getData();
     }
 
+    private static void getTasks() {
+        Map<String, String> data;
+        data = new LinkedHashMap<>();
+        data.put("Build tower in Pisa", "Ground looks good, no foundation work required.");
+        data.put("Finish bridge in Tacoma", "Found awesome girders at half the cost!");
+
+        Flowable.fromIterable(data.values())
+                .delay(5000, TimeUnit.MILLISECONDS)
+                .toList()
+                .toFlowable()
+                .flatMap(tasks -> Flowable.fromIterable(tasks).doOnNext(task -> { }).toList().toFlowable())
+                .doOnComplete(()->{});
+
+//        Flowable.fromIterable()
+    }
+
+
     private static void getData() throws InterruptedException {
         Map<String, String> data;
         data = new LinkedHashMap<>();
@@ -39,7 +58,7 @@ public class FlowableTest {
 
         Flowable<String> stringFlowable = Flowable.fromIterable(data.values());
 
-        Subscriber<String> subscriber=new Subscriber<String>() {
+        Subscriber<String> subscriber = new Subscriber<String>() {
             @Override
             public void onSubscribe(Subscription s) {
 
@@ -106,16 +125,15 @@ public class FlowableTest {
             }
         });
 
-        Thread.sleep(20*1000);
+        Thread.sleep(20 * 1000);
     }
 
     private static void test() throws InterruptedException {
-        int [] numbers = new int[]{1,2,3,4,5,6,7,8,9,10};
+        int[] numbers = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Flowable<Integer> just = Flowable.just(1, 2, 3, 4, 5, 6);
 
 
-
-        Subscriber<Integer> subscriber= new Subscriber<Integer>() {
+        Subscriber<Integer> subscriber = new Subscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
                 System.out.println();
@@ -185,7 +203,7 @@ public class FlowableTest {
 
                     }
                 });
-        Thread.sleep(1000*10);
+        Thread.sleep(1000 * 10);
 
     }
 
