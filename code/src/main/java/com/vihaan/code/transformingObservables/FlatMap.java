@@ -12,9 +12,31 @@ import io.reactivex.functions.Function;
 
 public class FlatMap {
 
-    public static void main(String []args)
-    {
+    public static void main(String []args) {
 
+//        flatMap();
+        flatMapLamda();
+    }
+
+
+    private static void flatMapLamda(){
+
+        Observable
+                .range(1,10)
+                .flatMap(number -> {
+                    return Observable
+                            .range(1,10)
+                            .flatMap(value -> {
+                                return Observable.just(number * value);
+                            });
+
+                })
+                .subscribe(number -> {
+                    System.out.println(number);
+                });
+    }
+
+    private static void flatMap(){
 
         Observable.fromArray(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
                 .map(new Function<Integer, Integer>() {
