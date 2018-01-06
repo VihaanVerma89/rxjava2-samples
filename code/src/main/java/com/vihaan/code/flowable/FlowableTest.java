@@ -1,26 +1,18 @@
 package com.vihaan.code.flowable;
 
-import android.util.TimeUtils;
-
-import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.operators.flowable.FlowableLastMaybe;
 
 /**
  * Created by vihaanverma on 01/01/18.
@@ -30,7 +22,84 @@ public class FlowableTest {
     public static void main(String[] args) throws InterruptedException {
 
 //        test();
-        getData();
+//        getData();
+        listTest();
+    }
+
+    private static void listTest(){
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "one");
+        map.put("2", "two");
+        map.put("3", "three");
+        map.put("4", "four");
+
+        Flowable<String> stringFlowable = Flowable.fromIterable(map.values());
+                stringFlowable.subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        s.request(2);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        System.out.println(s);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+                stringFlowable
+                        .toList()
+                        .subscribe(new SingleObserver<List<String>>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(List<String> strings) {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
+
+                stringFlowable
+                        .toList()
+                        .toFlowable()
+                        .subscribe(new Subscriber<List<String>>() {
+                            @Override
+                            public void onSubscribe(Subscription s) {
+                                s.request(1);
+                            }
+
+                            @Override
+                            public void onNext(List<String> strings) {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+
     }
 
     private static void getTasks() {
