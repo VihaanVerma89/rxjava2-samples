@@ -14,6 +14,24 @@ import io.reactivex.functions.Predicate;
 public class Filter {
 
     public static void main(String[] args) {
+        filterEmpty();
+    }
+
+    public static void filterEmpty(){
+        Observable.range(1,10)
+                .filter(number-> number>11)
+                .subscribe(
+                        number->{
+                            System.out.println(number);
+                        },
+                        throwable -> {throwable.getMessage();},
+                        ()->{
+                            System.out.println("done");
+                        }
+                );
+    }
+
+    public static void filter(){
         Observable.fromArray(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
                 .map(new Function<Integer, Integer>() {
                     @Override
